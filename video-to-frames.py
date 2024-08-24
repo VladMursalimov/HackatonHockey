@@ -1,12 +1,11 @@
 import cv2
 import os
 
-def video_to_frames(videopath):
+def video_to_frames(video_path):
     # Путь к видеофайлу
-    video_path = 'hockey_match.mp4'
 
     # Создаем папку для сохранения кадров
-    output_folder = 'frames'
+    output_folder = video_path+'frames'
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
@@ -28,5 +27,8 @@ def video_to_frames(videopath):
         frame_count += 1
 
     cap.release()
+    cv2.destroyAllWindows()
 
-cv2.destroyAllWindows()
+
+
+video_to_frames(video_path = 'pixellot_prime___ice_hockey (1080p).mp4')
