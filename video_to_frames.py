@@ -5,7 +5,7 @@ def video_to_frames(video_path):
     # Путь к видеофайлу
 
     # Создаем папку для сохранения кадров
-    output_folder = video_path+'frames'
+    output_folder = video_path + 'frames'
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 

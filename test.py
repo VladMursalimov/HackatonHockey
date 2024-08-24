@@ -42,15 +42,3 @@ for frame_id, detections in enumerate(results_list):
     yolo_results[frame_id] = convert_to_yolo_format(detections, frame_width, frame_height)
 
 
-from ultralytics import YOLO
-
-# Загрузка предобученной модели YOLOv8
-model = YOLO('yolov8n.pt')  # Замените на yolov8m.pt или другую, если нужно
-
-results_list = []
-
-# Выполнение детекции объектов на каждом кадре
-for frame in frames:
-    results = model(frame)
-    detections = results.xyxy[0].cpu().numpy()  # Получаем результаты
-    results_list.append(detections)

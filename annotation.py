@@ -2,19 +2,16 @@ from ultralytics import YOLO
 import cv2
 import os
 
-modelpath = 'best.pt'
-
 
 # Загрузка предобученной модели YOLOv8
-def annotaion(modelpath):
+def annotaion(modelpath, video_path):
     model = YOLO(modelpath)
 
     # Загрузка видео
-    video_path = 'short.mp4'
     cap = cv2.VideoCapture(video_path)
 
     # Директории для сохранения аннотированных кадров и меток
-    output_dir = video_path+modelpath+'annotated_frames'
+    output_dir = video_path.replace('.mp4', '') + '_annotated_frames'
     labels_dir = 'labels'
 
     os.makedirs(output_dir, exist_ok=True)
@@ -30,14 +27,34 @@ def annotaion(modelpath):
         # Детекция игроков с помощью YOLOv8
         results = model(frame)
 
-        # Фильтрация только нужных классов (например, класс 0 - человек)
-        filtered_boxes = [box for box in results[0].boxes if int(box.cls[0]) == 0]
+        filtered_boxes = results[0].boxes
 
-        # Отрисовка bounding boxes только для игроков
+        # Отрисовка bounding boxes для всех объектов
         for box in filtered_boxes:
+            cls = int(box.cls[0])
             x1, y1, x2, y2 = map(int, box.xyxy[0])  # Координаты боксов
-            cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)  # Рисуем прямоугольник
-            cv2.putText(frame, 'Player', (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)  # Подпись
+
+            # Определяем имя объекта на основе класса
+            if cls == 2:
+                player_name = 'Ref'
+            else:
+                player_name = f'Player{cls + 1}'
+            if cls == 0:
+                color = (0, 255, 0)
+            elif cls == 1:
+                color = (0, 0, 255)
+            elif cls == 2:
+                color = (255, 0, 0)
+
+            # Рисуем прямоугольник и подпись
+            # Параметры для тонких рамок и текста
+            box_thickness = 1  # Толщина рамки (уменьшена)
+            font_scale = 0.5  # Размер шрифта (уменьшен)
+            text_thickness = 1  # Толщина текста (уменьшена)
+
+            # Рисуем прямоугольник и подпись
+            cv2.rectangle(frame, (x1, y1), (x2, y2), color, box_thickness)
+            cv2.putText(frame, player_name, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, font_scale, color, text_thickness)
 
         # Сохранение аннотированного кадра
         cv2.imwrite(f'{output_dir}/frame_{frame_count}.jpg', frame)
@@ -57,5 +74,4 @@ def annotaion(modelpath):
 
     cap.release()
     cv2.destroyAllWindows()
-
-annotaion(modelpath)
+    return output_dir
