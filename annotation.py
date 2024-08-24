@@ -2,7 +2,7 @@ from ultralytics import YOLO
 import cv2
 import os
 
-modelpath = 'runs/detect/train23/weights/best.pt'
+modelpath = 'best.pt'
 
 
 # Загрузка предобученной модели YOLOv8
@@ -14,8 +14,9 @@ def annotaion(modelpath):
     cap = cv2.VideoCapture(video_path)
 
     # Директории для сохранения аннотированных кадров и меток
-    output_dir = 'annotated_frames'
+    output_dir = video_path+modelpath+'annotated_frames'
     labels_dir = 'labels'
+
     os.makedirs(output_dir, exist_ok=True)
     os.makedirs(labels_dir, exist_ok=True)
 
@@ -54,6 +55,7 @@ def annotaion(modelpath):
 
         frame_count += 1
 
-cap.release()
-cv2.destroyAllWindows()
+    cap.release()
+    cv2.destroyAllWindows()
 
+annotaion(modelpath)
