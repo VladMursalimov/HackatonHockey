@@ -1,11 +1,11 @@
 task: detect
 mode: train
-model: yolov8n.pt
+model: yolov8m.pt
 data: data.yaml
-epochs: 5
+epochs: 10
 time: null
 patience: 100
-batch: 16
+batch: 1
 imgsz: 852
 save: true
 save_period: -1
