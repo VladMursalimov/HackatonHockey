@@ -5,7 +5,7 @@ import re
 
 def frames_to_video(image_folder, video_name):
     # Путь к папке с изображениями
-    video_name = 'analyzed' + video_name
+    video_name = 'analyzed_' + video_name
     def extract_number(filename):
         match = re.search(r'\d+', filename)
         return int(match.group()) if match else 0
@@ -38,3 +38,6 @@ def frames_to_video(image_folder, video_name):
     cv2.destroyAllWindows()
 
     print(f'Видео сохранено как {video_name}')
+
+
+# frames_to_video('tactics_results', 'test2_merged_tactic.mp4')
